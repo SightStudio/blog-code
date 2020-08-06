@@ -1,4 +1,4 @@
-package level2.프린터;
+package programmers.level2.프린터;
 
 import java.util.*;
 

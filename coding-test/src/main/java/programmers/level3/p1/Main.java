@@ -1,4 +1,4 @@
-package level3.p1;
+package programmers.level3.p1;
 
 /**
  *  문제 설명

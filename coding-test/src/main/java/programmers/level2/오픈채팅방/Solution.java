@@ -1,4 +1,4 @@
-package level2.오픈채팅방;
+package programmers.level2.오픈채팅방;
 
 import java.util.*;
 

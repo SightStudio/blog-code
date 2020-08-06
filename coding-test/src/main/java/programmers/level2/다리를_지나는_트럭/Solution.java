@@ -1,4 +1,4 @@
-package level2.다리를_지나는_트럭;
+package programmers.level2.다리를_지나는_트럭;
 
 import java.util.*;
 

@@ -1,7 +1,4 @@
-package level2.t1;
-
-import java.util.LinkedList;
-import java.util.Queue;
+package programmers.level2.t1;
 
 public class Solution {
     public static void main(String[] args) {

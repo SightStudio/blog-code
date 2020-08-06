@@ -1,4 +1,4 @@
-package level3.베스트엘범;
+package programmers.level3.베스트엘범;
 
 import java.util.*;
 

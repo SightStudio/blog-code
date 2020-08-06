@@ -1,4 +1,4 @@
-package level3.기지국_설치;
+package programmers.level3.기지국_설치;
 
 public class Solution {
     public static void main(String[] args) {

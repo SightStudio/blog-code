@@ -1,4 +1,4 @@
-package level3.이중우선순위큐;
+package programmers.level3.이중우선순위큐;
 
 import java.util.Arrays;
 import java.util.Comparator;

@@ -1,4 +1,4 @@
-//package level2.탑;
+//package programmers.level2.탑;
 //
 //import java.util.*;
 //
