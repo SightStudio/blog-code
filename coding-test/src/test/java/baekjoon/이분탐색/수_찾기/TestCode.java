@@ -14,10 +14,10 @@ public class TestCode {
     @Test
     void test() {
         int nCnt = 5;
-        int[] n = {4, 1, 5, 2, 3}; // 1 2 3 4 5
+        int[] n = { 4, 1, 5, 2, 3 }; // 1 2 3 4 5
 
         int mCnt = 5;
-        int[] m = {1, 3, 7, 9, 5};
+        int[] m = { 1, 3, 7, 9, 5 };
 
         solution(n, m);
     }
@@ -46,7 +46,6 @@ public class TestCode {
             return false;
         }
 
-        // 1 3 5 9 10 20 40  |  15
         while(leftIdx <= rightIdx) {
             int middleIdx = ( leftIdx + rightIdx ) / 2;
 
