@@ -30,20 +30,6 @@ class Solution {
     }
 
     @Test
-    public void gcdTest() {
-
-        // given
-        int x = 85;
-        int y = 51;
-
-        // when
-        long result = getGCD(x, y);
-
-        // then
-        Assertions.assertEquals(17, result);
-    }
-
-    @Test
     public void gcdInPrimeNumberTest() {
 
         // given
@@ -64,6 +50,23 @@ class Solution {
         return wl * hl - ( wl + hl - getGCD(wl, hl));
     }
 
+
+    @Test
+    public void getGCD_LCD() {
+
+        // given
+        int x = 85;
+        int y = 51;
+
+        // when
+        long gcd = getGCD(x, y);
+        long lcd = getLCD(x, y, gcd);
+
+        // then
+        Assertions.assertEquals(17, gcd);
+        Assertions.assertEquals(255, lcd);
+    }
+
     public long getGCD(long x, long y) {
         long remain  = Math.max(x, y);
         long divider = Math.min(x, y);
@@ -73,12 +76,16 @@ class Solution {
 
             if(remain == 0) {
                 break;
-            } else {
-                divider = divider ^ remain;
-                remain  = divider ^ remain;
-                divider = divider ^ remain;
             }
+
+            divider = divider ^ remain;
+            remain  = divider ^ remain;
+            divider = divider ^ remain;
         }
         return divider;
+    }
+
+    public long getLCD(long x, long y, long gcd ) {
+        return x * y / gcd;
     }
 }
