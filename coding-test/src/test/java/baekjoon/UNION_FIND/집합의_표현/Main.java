@@ -35,7 +35,10 @@ public class Main {
 
         int[][] commands = new int[m][3];
         for (int i = 0; i < m; i++) {
-            int[] command = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+            int[] command = Arrays.stream(br.readLine().split(" "))
+                                  .mapToInt(Integer::parseInt)
+                                  .toArray();
+
             commands[i][0] = command[0];
             commands[i][1] = command[1];
             commands[i][2] = command[2];
