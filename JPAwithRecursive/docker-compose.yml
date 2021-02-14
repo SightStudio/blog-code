@@ -1,0 +1,20 @@
+version: '3'
+services:
+  maria-db:
+    container_name: recursive-mariadb
+    image: mariadb:10.4
+    volumes:
+      - ./infra/volumes/mariadb:/data
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: passwd
+      MYSQL_DATABASE: recursive
+    command:
+      ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+
+#
+#'mcr.microsoft.com/mssql/server'
+#'store/oracle/database-enterprise:12.2.0.1-slim'
+#'mysql:8.0'
+#'postgres:13.1'
