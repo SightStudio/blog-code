@@ -1,6 +1,5 @@
 package com.sight.jooqstart.app.domain.author;
 
-import com.sight.jooqstart.app.domain.book.BookDto;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.modelmapper.ModelMapper;
@@ -32,17 +31,17 @@ public class AuthorRepository {
 
     public List<AuthorBookDto> getAuthorsBookList(Integer id) {
         return dsl.select(
-                AUTHOR.ID.as("author_id")                      ,
-                AUTHOR.FIRST_NAME.as("author_firstname")       ,
-                AUTHOR.LAST_NAME.as("author_lastname")         ,
-                AUTHOR.DATE_OF_BIRTH.as("author_dateofbirth")  ,
-                AUTHOR.YEAR_OF_BIRTH.as("author_yearofbirth")  ,
-                AUTHOR.DISTINGUISHED.as("author_distinguished"),
-                BOOK.ID.as("book_id")                   ,
-                BOOK.AUTHOR_ID.as("book_authorid")      ,
-                BOOK.TITLE.as("book_title")             ,
-                BOOK.PUBLISHED_IN.as("book_publishedin"),
-                BOOK.LANGUAGE_ID.as("book_languageid")
+                AUTHOR.ID             .as("author_id")           ,
+                AUTHOR.FIRST_NAME     .as("author_firstname")    ,
+                AUTHOR.LAST_NAME      .as("author_lastname")     ,
+                AUTHOR.DATE_OF_BIRTH  .as("author_dateofbirth")  ,
+                AUTHOR.YEAR_OF_BIRTH  .as("author_yearofbirth")  ,
+                AUTHOR.DISTINGUISHED  .as("author_distinguished"),
+                BOOK.ID               .as("book_id")         ,
+                BOOK.AUTHOR_ID        .as("book_authorid")   ,
+                BOOK.TITLE            .as("book_title")      ,
+                BOOK.PUBLISHED_IN     .as("book_publishedin"),
+                BOOK.LANGUAGE_ID      .as("book_languageid")
         )
         .from(AUTHOR)
             .join(BOOK)
@@ -58,6 +57,18 @@ public class AuthorRepository {
                 .from(AUTHOR)
                 .where(AUTHOR.ID.eq(id))
                 .fetchOneInto(AuthorDto.class);
+    }
+
+    public int removeAuthor(AuthorDto author) {
+        return dsl.deleteFrom(AUTHOR)
+                .where(AUTHOR.ID.eq(author.getId()))
+                .execute();
+    }
+
+    public int removeAuthorById(Integer id) {
+        return dsl.deleteFrom(AUTHOR)
+                .where(AUTHOR.ID.eq(id))
+                .execute();
     }
 
     private List<Serializable> createInsertRecord(AuthorDto dto) {

@@ -7,9 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthorBookDto {
-
     private BookDto book;
-
     private AuthorDto author;
-
 }

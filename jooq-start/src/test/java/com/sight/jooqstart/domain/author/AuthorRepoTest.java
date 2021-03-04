@@ -21,7 +21,7 @@ public class AuthorRepoTest extends JooqRepoTest {
     private AuthorRepository authorRepository;
 
     @Test
-    @DisplayName("[Author] 저자 입력")
+    @DisplayName("[Author] 저자_입력_테스트")
     void 저자_입력_테스트() {
 
         // given
@@ -35,6 +35,21 @@ public class AuthorRepoTest extends JooqRepoTest {
         Assertions.assertEquals(author.getLastName()   , result.getLastName());
         Assertions.assertEquals(author.getYearOfBirth(), result.getYearOfBirth());
         Assertions.assertEquals(author.getDateOfBirth(), result.getDateOfBirth());
+    }
+
+    @Test
+    @DisplayName("[Author] 저자_삭제_테스트")
+    void 저자_삭제_테스트() {
+
+        // given
+        AuthorDto author = new AuthorDto("Sight", "Studio", LocalDate.parse("1995-12-12"), 1995);
+
+        // when
+        AuthorDto result = authorRepository.save(author);
+        int deleteCnt = authorRepository.removeAuthor(result);
+
+        // then
+        Assertions.assertEquals(1 , deleteCnt);
     }
 
     @Test

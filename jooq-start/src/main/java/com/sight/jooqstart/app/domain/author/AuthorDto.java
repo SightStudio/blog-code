@@ -1,6 +1,5 @@
 package com.sight.jooqstart.app.domain.author;
 
-import com.sight.jooqstart.app.domain.book.BookDto;
 import lombok.Getter;
 import lombok.Setter;
 
