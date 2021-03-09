@@ -2,7 +2,7 @@ package com.sight.blog.config.test
 
 import com.sight.blog.common.jpa.criteria.CriteriaConfig
 import com.sight.blog.config.TestEnv
-import com.taskforce.superinvention.config.jpa.JpaTestConfig
+import com.sight.blog.config.jpa.JpaTestConfig
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.Import
