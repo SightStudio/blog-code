@@ -1,4 +1,4 @@
-package com.taskforce.superinvention.config.jpa
+package com.sight.blog.config.jpa
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.boot.test.context.TestConfiguration

@@ -1,18 +1,15 @@
-package com.sight.blog.app.domain.board
+package com.sight.blog.app.domain.company
 
 import com.sight.blog.common.jpa.BaseRecordableEntity
 import javax.persistence.*
 
 @Entity
-class Board(
+class Company(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "board_seq")
+    @Column(name = "company_seq")
     var seq: Long ?= null,
 
-    var title: String,
-
-    var content: String,
-
+    var name: String,
 ): BaseRecordableEntity()
