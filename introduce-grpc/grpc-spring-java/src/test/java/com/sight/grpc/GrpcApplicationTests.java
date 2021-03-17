@@ -8,6 +8,6 @@ class GrpcApplicationTests {
 
     @Test
     void contextLoads() {
-    }
 
+    }
 }
