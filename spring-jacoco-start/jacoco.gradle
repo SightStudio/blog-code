@@ -1,0 +1,46 @@
+jacocoTestReport {
+    reports {
+        html.enabled  true
+        xml.enabled   false
+        csv.enabled   false
+    }
+
+    finalizedBy 'jacocoTestCoverageVerification'
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'INSTRUCTION'
+                value   = 'COVEREDRATIO'
+                minimum = 0.30
+            }
+        }
+
+        rule {
+            enabled = true
+            element = 'CLASS'
+
+            limit {
+                counter = 'BRANCH'
+                value   = 'COVEREDRATIO'
+                minimum = 0.30
+            }
+
+
+            excludes = [ ]
+        }
+    }
+
+}
+
+task testCoverage(type: Test) {
+    group 'verification'
+    description 'Runs the unit tests with coverage'
+
+    dependsOn(':test', ':jacocoTestReport', ':jacocoTestCoverageVerification')
+
+    tasks['jacocoTestReport'].mustRunAfter(tasks['test'])
+    tasks['jacocoTestCoverageVerification'].mustRunAfter(tasks['jacocoTestReport'])
+}
