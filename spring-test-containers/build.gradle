@@ -1,0 +1,48 @@
+plugins {
+    id 'org.springframework.boot'        version '2.4.5'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group   = 'com.test'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+def queryDSL      = '4.3.1'
+def testContainer = '1.15.3'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+ext {
+    set('testcontainersVersion', testContainer)
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation platform('org.testcontainers:testcontainers-bom:1.15.3')
+
+    implementation  "org.springframework.boot:spring-boot-starter-web"
+    implementation  "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation  "com.querydsl:querydsl-jpa:${queryDSL}"
+
+    runtimeOnly         "org.mariadb.jdbc:mariadb-java-client"
+    compileOnly         "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+
+    testImplementation  ("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+
+    testImplementation  "org.testcontainers:junit-jupiter:${testContainer}"
+    testImplementation  "org.testcontainers:mariadb:${testContainer}"
+}
+
+test {
+    useJUnitPlatform()
+}
