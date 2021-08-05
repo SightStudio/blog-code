@@ -1,0 +1,101 @@
+version: '3'
+services:
+  galera-master-node-1:
+    container_name: 'galera-master-node-1'
+    image: mariadb:10.4
+    volumes:
+      - ./infra/mariadb/master-1/volume:/var/lib/mysql
+      - ./infra/mariadb/config:/etc/mysql/mariadb.conf.d
+    ports:
+      - '3306:3306'
+    expose:
+      - '4444'
+      - '4568'
+      - '4567'
+    environment:
+      MYSQL_ROOT_PASSWORD: passwd
+      MYSQL_DATABASE: test-db
+    command:
+      [ 'mysqld', '--wsrep_new_cluster' ]
+
+  mysql-exporter-1:
+    image: prom/mysqld-exporter
+    depends_on:
+      - 'galera-master-node-1'
+    ports:
+      - '9104:9104'
+    environment:
+      DATA_SOURCE_NAME: "root:passwd@(host.docker.internal:3306)/"
+
+  galera-master-node-2:
+    container_name: 'galera-master-node-2'
+    image: mariadb:10.4
+    depends_on:
+      - 'galera-master-node-1'
+    volumes:
+      - ./infra/mariadb/master-2/volume:/var/lib/mysql
+      - ./infra/mariadb/config:/etc/mysql/mariadb.conf.d
+    ports:
+      - '3307:3306'
+    expose:
+      - '4444'
+      - '4568'
+      - '4567'
+    environment:
+      MYSQL_ROOT_PASSWORD: passwd
+      MYSQL_DATABASE: test-db
+
+  mysql-exporter-2:
+    image: prom/mysqld-exporter
+    depends_on:
+      - 'galera-master-node-2'
+    ports:
+      - '9105:9104'
+    environment:
+      DATA_SOURCE_NAME: "root:passwd@(host.docker.internal:3307)/"
+
+  galera-master-node-3:
+    container_name: 'galera-master-node-3'
+    image: mariadb:10.4
+    depends_on:
+      - 'galera-master-node-1'
+    volumes:
+      - ./infra/mariadb/master-3/volume:/var/lib/mysql
+      - ./infra/mariadb/config:/etc/mysql/mariadb.conf.d
+    ports:
+      - '3308:3306'
+    expose:
+      - '4444'
+      - '4568'
+      - '4567'
+    environment:
+      MYSQL_ROOT_PASSWORD: passwd
+      MYSQL_DATABASE: test-db
+
+  mysql-exporter-3:
+    image: prom/mysqld-exporter
+    depends_on:
+      - 'galera-master-node-3'
+    ports:
+      - '9106:9104'
+    environment:
+      DATA_SOURCE_NAME: "root:passwd@(host.docker.internal:3308)/"
+
+  redis-exporter-1:
+    image: oliver006/redis_exporter
+    ports:
+      - '9121:9121'
+
+  promethus:
+    image: prom/prometheus
+    volumes:
+      - ./infra/prometheus:/etc/prometheus
+    ports:
+      - '9090:9090'
+
+  grafana:
+    image: grafana/grafana
+    depends_on:
+      - 'promethus'
+    ports:
+      - '3001:3000'
