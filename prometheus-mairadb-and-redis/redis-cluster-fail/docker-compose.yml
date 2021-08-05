@@ -1,0 +1,50 @@
+version: '3'
+services:
+  redis-master:
+#    image: redis:6.2.5
+    build:
+      context: ./redis-image
+      dockerfile: Dockerfile
+    network_mode: "host"
+    volumes:
+      - "./redis-master/data:/data"
+    environment:
+      - REQUIREPASS=passwd
+      - MASTERHOST=""
+      - MASTERPORT=""
+      - CLIENTHOST=host.docker.internal
+      - CLIENTPORT=6379
+
+  redis-slave-1:
+#    image: redis:6.2.5
+    build:
+      context: ./redis-image
+      dockerfile: Dockerfile
+    network_mode: "host"
+    depends_on:
+      - "redis-master"
+    volumes:
+      - "./redis-slave-1/data:/data"
+    environment:
+      - REQUIREPASS=passwd
+      - MASTERHOST=host.docker.internal
+      - MASTERPORT=6379
+      - CLIENTHOST=host.docker.internal
+      - CLIENTPORT=6380
+
+  redis-slave-2:
+#    image: redis:6.2.5
+    build:
+      context: ./redis-image
+      dockerfile: Dockerfile
+    network_mode: "host"
+    depends_on:
+      - "redis-master"
+    volumes:
+      - "./redis-slave-2/data:/data"
+    environment:
+      - REQUIREPASS=passwd
+      - MASTERHOST=host.docker.internal
+      - MASTERPORT=6379
+      - CLIENTHOST=host.docker.internal
+      - CLIENTPORT=6381
