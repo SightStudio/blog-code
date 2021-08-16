@@ -81,15 +81,12 @@ services:
     environment:
       DATA_SOURCE_NAME: "root:passwd@(host.docker.internal:3308)/"
 
-  redis-exporter-1:
-    image: oliver006/redis_exporter
-    ports:
-      - '9121:9121'
-
   promethus:
     image: prom/prometheus
     volumes:
-      - ./infra/prometheus:/etc/prometheus
+      - ./infra/prometheus/config:/etc/prometheus
+      - ./infra/prometheus/volume:/prometheus
+
     ports:
       - '9090:9090'
 

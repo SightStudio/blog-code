@@ -46,26 +46,3 @@ scrape_configs:
     scrape_interval: "15s"
     static_configs:
       - targets: ['host.docker.internal:9106']
-
-  - job_name: 'node-exporter'
-    static_configs:
-      - targets: ['58.142.180.87:9100']
-
-  - job_name: 'redis_exporter_targets'
-    metrics_path: /scrape
-    static_configs:
-      - targets:
-        - redis://host.docker.internal:7000
-        - redis://host.docker.internal:7001
-        - redis://host.docker.internal:7002
-    relabel_configs:
-      - source_labels: [ __address__ ]
-        target_label: __param_target
-      - source_labels: [ __param_target ]
-        target_label: instance
-      - target_label: __address__ 
-        replacement: 'host.docker.internal:9121'
-
-  - job_name: 'redis_exporter'
-    static_configs:
-      - targets: [ 'host.docker.internal:9121' ]
