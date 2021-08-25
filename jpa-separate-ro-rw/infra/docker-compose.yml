@@ -1,0 +1,66 @@
+version: '3'
+services:
+
+  haproxy-galera-cluster:
+    image: haproxy:2.4
+    depends_on:
+      - 'galera-node-3-ro'
+    volumes:
+      - ./haproxy/config:/usr/local/etc/haproxy:ro
+    ports:
+      - '3306:3306'  # Read-Write
+      - '3307:3307'  # Read-Only
+
+  galera-node-1-rw:
+    image: mariadb:10.4
+    volumes:
+      - ./mariadb/node-1/volume:/var/lib/mysql
+      - ./mariadb/config:/etc/mysql/mariadb.conf.d
+    ports:
+      - '3308:3306'
+    expose:
+      - '4444'
+      - '4568'
+      - '4567'
+    environment:
+      - MYSQL_ROOT_PASSWORD=passwd
+      - MYSQL_DATABASE=test-db
+      - TZ=Asia/Seoul
+    command:
+      [ 'mysqld', '--wsrep_new_cluster' ]
+
+  galera-node-2-ro:
+    image: mariadb:10.4
+    depends_on:
+      - 'galera-node-1-rw'
+    volumes:
+      - ./mariadb/node-2/volume:/var/lib/mysql
+      - ./mariadb/config:/etc/mysql/mariadb.conf.d
+    ports:
+      - '3309:3306'
+    expose:
+      - '4444'
+      - '4568'
+      - '4567'
+    environment:
+      - MYSQL_ROOT_PASSWORD=passwd
+      - MYSQL_DATABASE=test-db
+      - TZ=Asia/Seoul
+
+  galera-node-3-ro:
+    image: mariadb:10.4
+    depends_on:
+      - 'galera-node-1-rw'
+    volumes:
+      - ./mariadb/node-3/volume:/var/lib/mysql
+      - ./mariadb/config:/etc/mysql/mariadb.conf.d
+    ports:
+      - '3310:3306'
+    expose:
+      - '4444'
+      - '4568'
+      - '4567'
+    environment:
+      - MYSQL_ROOT_PASSWORD=passwd
+      - MYSQL_DATABASE=test-db
+      - TZ=Asia/Seoul
