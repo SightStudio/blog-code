@@ -20,6 +20,7 @@ import java.util.Map;
 @Configuration
 public class UserDataSourceConfig extends BaseDataSourceConfig {
 
+    public static final String DATASOURCE = "userDataSource";
     public static final String ROUTE_DATASOURCE = "userRouteDataSource";
     public static final String RW_DATASOURCE = "userRwDataSource";
     public static final String RO_DATASOURCE = "userRoDataSource";
@@ -31,21 +32,25 @@ public class UserDataSourceConfig extends BaseDataSourceConfig {
     }
 
     @Profile(AppProfile.NON_TEST)
+    @Bean(name = DATASOURCE)
+    public DataSource dataSource(
+            @Qualifier(UserDataSourceConfig.ROUTE_DATASOURCE) DataSource routeDataSource
+    ) {
+        return new LazyConnectionDataSourceProxy(routeDataSource);
+    }
+
+
+    @Profile(AppProfile.NON_TEST)
     @Bean(name = ROUTE_DATASOURCE)
     public DataSource routingDataSource(
             @Qualifier(UserDataSourceConfig.RW_DATASOURCE) DataSource rwDataSource,
             @Qualifier(UserDataSourceConfig.RO_DATASOURCE) DataSource roDataSource
     ) {
-        UserRouteDataSource routingDataSource = new UserRouteDataSource();
-
         Map<Object, Object> dataSourceMap = new HashMap<>();
         dataSourceMap.put(DataSourceRole.READ_WRITE, rwDataSource);
-        dataSourceMap.put(DataSourceRole.READ_ONLY , roDataSource);
+        dataSourceMap.put(DataSourceRole.READ_ONLY, roDataSource);
 
-        routingDataSource.setTargetDataSources(dataSourceMap);
-        routingDataSource.setDefaultTargetDataSource(rwDataSource);
-
-        return routingDataSource;
+        return new UserRouteDataSource(dataSourceMap);
     }
 
 
@@ -58,7 +63,7 @@ public class UserDataSourceConfig extends BaseDataSourceConfig {
         dataSource.setUsername(getUsername(dataSourceType));
         dataSource.setPassword(getPassword(dataSourceType));
 
-        return new LazyConnectionDataSourceProxy(dataSource);
+        return dataSource;
     }
 
     @Profile(AppProfile.NON_TEST)
@@ -70,7 +75,7 @@ public class UserDataSourceConfig extends BaseDataSourceConfig {
         dataSource.setUsername(getUsername(dataSourceType));
         dataSource.setPassword(getPassword(dataSourceType));
 
-        return new LazyConnectionDataSourceProxy(dataSource);
+        return dataSource;
     }
 
     @Profile(AppProfile.TEST)

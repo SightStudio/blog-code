@@ -30,6 +30,7 @@ public class BoardDatabaseConfig extends BaseDatabaseConfig {
     public static final String transactionManager = "boardTransactionManager";
     public static final String entityPackage = "com.sight.app.domain.board";
     public static final DataSourceType dataSourceType = DataSourceType.BOARD;
+    public static final String SCHEMA_NAME = "board";
 
     public BoardDatabaseConfig(Environment env) {
         super(env);
@@ -38,7 +39,7 @@ public class BoardDatabaseConfig extends BaseDatabaseConfig {
     @Profile(AppProfile.NON_TEST)
     @Bean(name = entityManager)
     public LocalContainerEntityManagerFactoryBean entityManagerFactory (
-            @Qualifier(BoardDataSourceConfig.ROUTE_DATASOURCE) DataSource routeDataSource
+            @Qualifier(BoardDataSourceConfig.DATASOURCE) DataSource routeDataSource
     ) {
 
         LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
