@@ -1,6 +1,9 @@
 package com.sight.app.domain.board;
 
 import com.sight.config.db.BaseDataSourceConfig;
+import com.sight.config.db.board.BoardDataSourceConfig;
+import com.sight.config.db.board.BoardDatabaseConfig;
+import com.sight.config.db.board.BoardRouteDataSource;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import javax.persistence.EntityManager;
@@ -13,7 +16,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     }
 
     @Override
-    @PersistenceContext(unitName = BaseDataSourceConfig.BOARD)
+    @PersistenceContext(unitName = BoardDatabaseConfig.SCHEMA_NAME)
     public void setEntityManager(EntityManager entityManager) {
         super.setEntityManager(entityManager);
     }

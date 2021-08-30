@@ -1,6 +1,8 @@
 package com.sight.app.domain.user;
 
 import com.sight.config.db.BaseDataSourceConfig;
+import com.sight.config.db.board.BoardDataSourceConfig;
+import com.sight.config.db.user.UserDatabaseConfig;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
@@ -14,7 +16,7 @@ public class MyUserRepositoryImpl extends QuerydslRepositorySupport implements M
     }
 
     @Override
-    @PersistenceContext(unitName = BaseDataSourceConfig.USER)
+    @PersistenceContext(unitName = UserDatabaseConfig.SCHEMA_NAME)
     public void setEntityManager(EntityManager entityManager) {
         super.setEntityManager(entityManager);
     }

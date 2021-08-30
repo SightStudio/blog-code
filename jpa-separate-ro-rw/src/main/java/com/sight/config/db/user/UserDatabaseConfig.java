@@ -30,6 +30,7 @@ public class UserDatabaseConfig extends BaseDatabaseConfig {
     public static final String transactionManager = "userTransactionManager";
     public static final String entityPackage = "com.sight.app.domain.user";
     public static final DataSourceType dataSourceType = DataSourceType.USER;
+    public static final String SCHEMA_NAME = "user";
 
     public UserDatabaseConfig(Environment env) {
         super(env);
@@ -38,7 +39,7 @@ public class UserDatabaseConfig extends BaseDatabaseConfig {
     @Profile(AppProfile.NON_TEST)
     @Bean(name = entityManager)
     public LocalContainerEntityManagerFactoryBean entityManagerFactory (
-            @Qualifier(UserDataSourceConfig.ROUTE_DATASOURCE) DataSource routeDataSource
+            @Qualifier(UserDataSourceConfig.DATASOURCE) DataSource routeDataSource
     ) {
 
         LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
