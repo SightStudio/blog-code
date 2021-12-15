@@ -1,0 +1,80 @@
+version: '3.6'
+services:
+
+  redis-master-1:
+    image: redis:6.2.5
+    volumes:
+      - ./redis/node1/master/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/node1/master/volume:/data
+    network_mode: "host"
+    command: redis-server /usr/local/etc/redis/redis.conf
+
+  redis-slave-1:
+    image: redis:6.2.5
+    volumes:
+      - ./redis/node1/slave/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/node1/slave/volume:/data
+    network_mode: "host"
+    command: redis-server /usr/local/etc/redis/redis.conf
+
+#  redis-sentinel-1:
+#    image: redis:6.2.5
+#    volumes:
+#      - ./redis/node1/sentinel/redis.conf:/usr/local/etc/redis/redis.conf
+#      - ./redis/node1/sentinel/volume:/data
+#    network_mode: "host"
+#    command: redis-sentinel /usr/local/etc/redis/redis.conf
+#    depends_on:
+#      - redis-slave-1
+
+  redis-master-2:
+    image: redis:6.2.5
+    volumes:
+      - ./redis/node2/master/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/node2/master/volume:/data
+    network_mode: "host"
+    command: redis-server /usr/local/etc/redis/redis.conf
+
+  redis-slave-2:
+    image: redis:6.2.5
+    volumes:
+      - ./redis/node2/slave/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/node2/slave/volume:/data
+    network_mode: "host"
+    command: redis-server /usr/local/etc/redis/redis.conf
+
+#  redis-sentinel-2:
+#    image: redis:6.2.5
+#    volumes:
+#      - ./redis/node2/sentinel/redis.conf:/usr/local/etc/redis/redis.conf
+#      - ./redis/node2/sentinel/volume:/data
+#    network_mode: "host"
+#    command: redis-sentinel /usr/local/etc/redis/redis.conf
+#    depends_on:
+#      - redis-slave-2
+
+  redis-master-3:
+    image: redis:6.2.5
+    volumes:
+      - ./redis/node3/master/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/node3/master/volume:/data
+    network_mode: "host"
+    command: redis-server /usr/local/etc/redis/redis.conf
+
+  redis-slave-3:
+    image: redis:6.2.5
+    volumes:
+      - ./redis/node3/slave/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/node3/slave/volume:/data
+    network_mode: "host"
+    command: redis-server /usr/local/etc/redis/redis.conf
+
+#  redis-sentinel-3:
+#    image: redis:6.2.5
+#    volumes:
+#      - ./redis/node3/sentinel/redis.conf:/usr/local/etc/redis/redis.conf
+#      - ./redis/node3/sentinel/volume:/data
+#    network_mode: "host"
+#    command: redis-sentinel /usr/local/etc/redis/redis.conf
+#    depends_on:
+#      - redis-slave-3
