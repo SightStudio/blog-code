@@ -4,6 +4,7 @@ import com.sight.config.AppProfile;
 import com.sight.config.db.BaseDataSourceConfig;
 import com.sight.config.db.DataSourceRole;
 import com.sight.config.db.DataSourceType;
+import com.sight.config.db.user.UserDataSourceConfig;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,7 @@ import java.util.Map;
 @Configuration
 public class BoardDataSourceConfig extends BaseDataSourceConfig {
 
+    public static final String DATASOURCE = "boardDataSource";
     public static final String ROUTE_DATASOURCE = "boardRouteDataSource";
     public static final String RW_DATASOURCE = "boardRwDataSource";
     public static final String RO_DATASOURCE = "boardRoDataSource";
@@ -30,21 +32,25 @@ public class BoardDataSourceConfig extends BaseDataSourceConfig {
     }
 
     @Profile(AppProfile.NON_TEST)
+    @Bean(name = DATASOURCE)
+    public DataSource dataSource(
+            @Qualifier(BoardDataSourceConfig.ROUTE_DATASOURCE) DataSource routeDataSource
+    ) {
+        return new LazyConnectionDataSourceProxy(routeDataSource);
+    }
+
+    @Profile(AppProfile.NON_TEST)
     @Bean(name = ROUTE_DATASOURCE)
     public DataSource routingDataSource(
             @Qualifier(BoardDataSourceConfig.RW_DATASOURCE) DataSource rwDataSource,
             @Qualifier(BoardDataSourceConfig.RO_DATASOURCE) DataSource roDataSource
     ) {
-        BoardRouteDataSource routingDataSource = new BoardRouteDataSource();
 
         Map<Object, Object> dataSourceMap = new HashMap<>();
         dataSourceMap.put(DataSourceRole.READ_WRITE, rwDataSource);
         dataSourceMap.put(DataSourceRole.READ_ONLY , roDataSource);
 
-        routingDataSource.setTargetDataSources(dataSourceMap);
-        routingDataSource.setDefaultTargetDataSource(rwDataSource);
-
-        return routingDataSource;
+        return  new BoardRouteDataSource(dataSourceMap);
     }
 
 
@@ -57,7 +63,7 @@ public class BoardDataSourceConfig extends BaseDataSourceConfig {
         dataSource.setUsername(getUsername(dataSourceType));
         dataSource.setPassword(getPassword(dataSourceType));
 
-        return new LazyConnectionDataSourceProxy(dataSource);
+        return dataSource;
     }
 
     @Profile(AppProfile.NON_TEST)
@@ -69,7 +75,7 @@ public class BoardDataSourceConfig extends BaseDataSourceConfig {
         dataSource.setUsername(getUsername(dataSourceType));
         dataSource.setPassword(getPassword(dataSourceType));
 
-        return new LazyConnectionDataSourceProxy(dataSource);
+        return dataSource;
     }
 
     @Profile(AppProfile.TEST)

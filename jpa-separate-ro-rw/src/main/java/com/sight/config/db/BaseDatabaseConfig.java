@@ -25,14 +25,11 @@ public class BaseDatabaseConfig {
         Map<String, Object> properties = new HashMap<>();
         properties.put("hibernate.hbm2ddl.auto", getDdlAuto(dataSourceType));
         properties.put("hibernate.dialect", getDialect());
-        properties.put("hibernate.connection.provider_disables_autocommit", "true");
         return properties;
     }
 
     protected HibernateJpaVendorAdapter getJpaVendorAdapter() {
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setPrepareConnection(false);
-        return vendorAdapter;
+        return new HibernateJpaVendorAdapter();
     }
 
     protected String getDdlAuto(final DataSourceType dataSourceType) {
