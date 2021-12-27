@@ -1,0 +1,46 @@
+String dbUser   = System.properties["db-user"]   ?: "root"
+String dbPasswd = System.properties["db-passwd"] ?: "passwd"
+
+jooq {
+    configurations {
+        testDB {
+            generationTool {
+                jdbc {
+                    driver = 'com.mysql.cj.jdbc.Driver'
+                    url = 'jdbc:mysql://localhost:3306'
+                    user = "${dbUser}"
+                    password = "${dbPasswd}"
+                }
+
+                generator {
+                    name = 'org.jooq.codegen.DefaultGenerator'
+
+                    database {
+                        name = 'org.jooq.meta.mysql.MySQLDatabase'
+
+                        schemata {
+                            schema {
+                                inputSchema = 'jooq'
+                            }
+                        }
+                    }
+
+                    generate {
+                        deprecated = false
+                        records = true
+                        immutablePojos = true
+                        fluentSetters = true
+                        javaTimeTypes = true
+                    }
+
+                    target {
+                        packageName = 'jooq.jooq_dsl'
+                        directory = 'src/generated/'
+                    }
+
+                    strategy.name = 'jooq.custom.generator.JPrefixGeneratorStrategy'
+                }
+            }
+        }
+    }
+}

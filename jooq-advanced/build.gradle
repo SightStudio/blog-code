@@ -1,0 +1,74 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.1'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'nu.studer.jooq' version '6.0.1'
+}
+
+group = 'com.sightstudio'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+apply from: 'jooq.gradle'
+
+ext {
+    jooqVersion = '3.15.5'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation 'org.modelmapper.extensions:modelmapper-jooq:2.3.9'
+    implementation 'com.github.chhsiao90:modelmapper-module-java8-datatypes:1.2.1'
+    implementation 'com.github.chhsiao90:modelmapper-module-jsr310:1.2.1'
+    implementation 'javax.persistence:javax.persistence-api:2.2'
+
+    runtimeOnly 'mysql:mysql-connector-java:8.0.27'
+
+    implementation "org.jooq:jooq-meta:${jooqVersion}"
+    implementation "org.jooq:jooq-codegen:${jooqVersion}"
+    jooqGenerator project(':jooq-custom')
+
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+}
+
+tasks {
+
+    test {
+        useJUnitPlatform()
+    }
+
+    compileJava {
+        dependsOn(generateTestDBJooq)
+    }
+
+    generateTestDBJooq {
+        dependsOn(processResources, processTestResources)
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java", "src/generated"]
+        }
+    }
+}
