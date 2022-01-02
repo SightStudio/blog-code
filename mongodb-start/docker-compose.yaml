@@ -1,0 +1,15 @@
+version: '3.6'
+services:
+  mongodb-container:
+    image: mongo:5.0.3
+    volumes:
+      - mongodb:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: tutorial
+    ports:
+      - "27017:27017"
+volumes:
+  mongodb:
+    external: true

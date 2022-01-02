@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+group 'com.sightstudio'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    jooqVersion = '3.15.5'
+}
+
+dependencies {
+    implementation "org.jooq:jooq-codegen:${jooqVersion}"
+    runtimeOnly 'mysql:mysql-connector-java:8.0.27'
+}

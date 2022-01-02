@@ -1,0 +1,40 @@
+### 저자 등록
+POST {{serverURI}}/author
+Content-Type: application/json
+Accept: application/json
+
+{
+  "firstName": "bruce",
+  "lastName": "lee",
+  "dateOfBirth": "2021-12-12",
+  "yearOfBirth": "2021"
+}
+
+
+### 저자 다중 등록
+POST {{serverURI}}/author/bulk
+Content-Type: application/json
+Accept: application/json
+
+{
+  "authorList" : [
+    {
+      "firstName": "bruce",
+      "lastName": "lee",
+      "dateOfBirth": "2021-12-12",
+      "yearOfBirth": "2021"
+    },
+
+    {
+      "firstName": "roro",
+      "lastName": "po",
+      "dateOfBirth": "2021-12-12",
+      "yearOfBirth": "2021"
+    }
+  ]
+}
+
+### 저자 목록 조회
+GET {{serverURI}}/author
+Content-Type: application/json
+Accept: application/json
