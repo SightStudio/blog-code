@@ -61,6 +61,8 @@ public class JooqConfig {
         DefaultConfiguration jooqConfiguration = new DefaultConfiguration();
         jooqConfiguration.set(connectionProvider());
         jooqConfiguration.set(new DefaultExecuteListenerProvider(exceptionTransformer()));
+        jooqConfiguration.set(new PerformanceListener());
+
         SQLDialect dialect = SQLDialect.MYSQL;
         jooqConfiguration.set(dialect);
 
