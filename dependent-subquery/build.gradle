@@ -1,0 +1,73 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.6'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'nu.studer.jooq' version '7.1.1'
+}
+
+group = 'com.sight'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+apply from: 'jooq.gradle'
+ext {
+    jooqVersion = '3.16.4'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.modelmapper.extensions:modelmapper-jooq:2.3.9'
+    implementation 'com.github.chhsiao90:modelmapper-module-java8-datatypes:1.2.1'
+    implementation 'com.github.chhsiao90:modelmapper-module-jsr310:1.2.1'
+    runtimeOnly 'mysql:mysql-connector-java:8.0.27'
+
+
+    // 랜덤 단어 생성기
+    implementation('com.github.javafaker:javafaker:1.0.2')
+
+    implementation "org.jooq:jooq-meta:${jooqVersion}"
+    jooqGenerator project(':jooq-custom')
+    jooqGenerator 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+//    실패 (jpa 엔티티 기반으로 JOOQ DSL을 생성할때 필요한 Dependency
+//    jooqGenerator files(sourceSets.main.output.classesDirs)
+//    jooqGenerator 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1'
+//    jooqGenerator 'jakarta.persistence:jakarta.persistence-api:3.1.0-RC2'
+//    jooqGenerator 'jakarta.transaction:jakarta.transaction-api:2.0.1'
+//    jooqGenerator 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+}
+
+tasks {
+
+    test {
+        useJUnitPlatform()
+    }
+
+    compileJava {
+        dependsOn(generateTestDBJooq)
+    }
+
+    generateTestDBJooq {
+        dependsOn(processResources, processTestResources)
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java", "src/generated"]
+        }
+    }
+}

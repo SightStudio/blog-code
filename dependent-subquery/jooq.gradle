@@ -1,0 +1,103 @@
+String dbUser   = System.properties["db-user"]   ?: "root"
+String dbPasswd = System.properties["db-passwd"] ?: "passwd"
+
+/**
+ * 실제 DB가 아닌 JPA 엔티티를 통해 JOOQ DSL 생성
+ * 순환참조 문제로 인해 실패함.. 나중에 재도전하자
+ *
+ * [에러]
+ Circular dependency between the following tasks:
+ :classes
+ \--- :compileJava
+ \--- :generateTestDBJooq
+ \--- :classes (*)
+ */
+//jooq {
+//    configurations {
+//        testDB {
+//            generationTool {
+//                generator {
+//                    database {
+//                        name = 'org.jooq.meta.extensions.jpa.JPADatabase'
+//                        properties {
+//                            property {
+//                                key = 'packages'
+//                                value = 'com.sight.jooq.app.domain.board'
+//                            }
+//
+//                            property {
+//                                key = 'hibernate.physical_naming_strategy'
+//                                value = 'org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy'
+//                            }
+//                        }
+//                        includes = ".*"
+//                    }
+//                    generate {
+//                        deprecated = false
+//                        records = true
+//                        immutablePojos = true
+//                        fluentSetters = true
+//                        javaTimeTypes = true
+//                    }
+//
+//                    target {
+//                        packageName = 'jooq.jooq_dsl'
+//                        directory = 'src/generated/'
+//                        encoding = 'UTF-8'
+//                    }
+//
+//                    strategy.name = 'jooq.custom.generator.JPrefixGeneratorStrategy'
+//                }
+//            }
+//        }
+//    }
+//}
+
+/**
+ * 실제 DB를 조회하여 DSL 생성
+ * 위의 방식처럼 JPA 엔티티를 통해 직접적인 DB 조회 없이 엔티티만으로
+ * DSL을 생성해보자 (QueryDSL-jpa 처럼)
+ */
+jooq {
+    configurations {
+        testDB {
+            generationTool {
+                jdbc {
+                    driver = 'com.mysql.cj.jdbc.Driver'
+                    url = 'jdbc:mysql://localhost:3306'
+                    user = "${dbUser}"
+                    password = "${dbPasswd}"
+                }
+
+                generator {
+                    name = 'org.jooq.codegen.DefaultGenerator'
+
+                    database {
+                        name = 'org.jooq.meta.mysql.MySQLDatabase'
+
+                        schemata {
+                            schema {
+                                inputSchema = 'jooq'
+                            }
+                        }
+                    }
+
+                    generate {
+                        deprecated = false
+                        records = true
+                        immutablePojos = true
+                        fluentSetters = true
+                        javaTimeTypes = true
+                    }
+
+                    target {
+                        packageName = 'jooq.jooq_dsl'
+                        directory = 'src/generated/'
+                    }
+
+                    strategy.name = 'jooq.custom.generator.JPrefixGeneratorStrategy'
+                }
+            }
+        }
+    }
+}
