@@ -1,0 +1,4 @@
+rootProject.name = 'jooq-dependent-subquery'
+include 'jooq-custom'
+include 'jooq-entity'
+include 'application'
