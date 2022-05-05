@@ -11,4 +11,6 @@ public class JPrefixGeneratorStrategy extends DefaultGeneratorStrategy {
         }
         return super.getJavaClassName(definition, mode);
     }
+
+
 }
