@@ -1,0 +1,46 @@
+jooq {
+    configurations {
+        testDB {
+            generationTool {
+                generator {
+                    database {
+                        name = 'org.jooq.meta.extensions.jpa.JPADatabase'
+                        properties {
+                            property {
+                                key = 'packages'
+                                value = 'com.sight.entity'
+                            }
+
+                            property {
+                                key = 'useAttributeConverters'
+                                value = true
+                            }
+
+                            // h2 for codegen creates table with uppercase so we need to create custom naming strategy
+                            // https://github.com/jOOQ/jOOQ/issues/8347
+                            property {
+                                key = 'hibernate.physical_naming_strategy'
+                                value = 'com.sight.naming.QuotedPhysicalNamingStrategy'
+                            }
+                        }
+                    }
+                    generate {
+                        deprecated = false
+                        records = true
+                        immutablePojos = true
+                        fluentSetters = true
+                        javaTimeTypes = true
+                    }
+
+                    target {
+                        packageName = 'jooq.jooq_dsl'
+                        directory = 'src/generated'
+                        encoding = 'UTF-8'
+                    }
+
+                    strategy.name = 'jooq.custom.generator.JPrefixGeneratorStrategy'
+                }
+            }
+        }
+    }
+}
