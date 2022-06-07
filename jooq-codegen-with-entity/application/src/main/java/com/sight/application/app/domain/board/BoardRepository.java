@@ -3,6 +3,7 @@ package com.sight.application.app.domain.board;
 import com.sight.application.app.util.RandomUtil;
 import com.sight.application.config.jooq.BaseJooqRepository;
 import com.sight.application.web.BoardRegisterRequest;
+import com.sight.entity.Board;
 import jooq.jooq_dsl.tables.JBoard;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -42,5 +43,14 @@ public class BoardRepository implements BaseJooqRepository {
                 board.REG_DATE
         ).valuesOfRows(insertRows)
         .execute();
+    }
+
+    public List<Board> getBoardWithPaging(int page, int pageSize) {
+      final JBoard board = JBoard.BOARD;
+      return dsl.select(board.asterisk())
+          .from(board)
+          .limit(pageSize)
+          .offset(page * pageSize)
+          .fetchInto(Board.class);
     }
 }
