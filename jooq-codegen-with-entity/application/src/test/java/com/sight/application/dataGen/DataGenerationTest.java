@@ -31,11 +31,11 @@ public class DataGenerationTest extends IntegrationTest {
     private static final int RANDOM_USER_SIZE = 0;
 
     // 랜덤으로 생성할 게시판 종류 사이즈
-    private static final int RANDOM_BOARD_TYPE_SIZE = 100000;
+    private static final int RANDOM_BOARD_TYPE_SIZE = 0;
 
     // split data insertion to aviod oom
-    private static final int RANDOM_BOARD_INSERTION_CHUNK_SIZE = 50000;
-    private static final int RANDOM_BOARD_INSERTION_CHUNK_LOOP_SIZE = 0;
+    private static final int RANDOM_BOARD_INSERTION_CHUNK_SIZE = 40000;
+    private static final int RANDOM_BOARD_INSERTION_CHUNK_LOOP_SIZE = 100;
 
     private static final int TOTAL_REGISTERED_BOARD_SIZE = RANDOM_BOARD_INSERTION_CHUNK_SIZE * RANDOM_BOARD_INSERTION_CHUNK_LOOP_SIZE;
 
