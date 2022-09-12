@@ -1,4 +1,5 @@
 jooq {
+    version = '3.16.6'
     configurations {
         testDB {
             generationTool {

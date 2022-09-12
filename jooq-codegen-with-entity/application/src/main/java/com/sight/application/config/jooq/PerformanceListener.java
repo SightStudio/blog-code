@@ -8,18 +8,26 @@ import org.jooq.tools.StopWatch;
 @Slf4j
 public class PerformanceListener extends DefaultExecuteListener {
 
+    private static final long MAX_ACCEPTABLE_QUERY_TIME = 5_000_000_000L;
+
     StopWatch watch;
 
     @Override
     public void executeStart(ExecuteContext ctx) {
         super.executeStart(ctx);
-        watch = new StopWatch();
+         watch = new StopWatch();
     }
 
     @Override
     public void executeEnd(ExecuteContext ctx) {
         super.executeEnd(ctx);
-        if (watch.split() > 5_000_000_000L)
-            log.warn("Slow Query Detected: \n" + ctx.query(), new Exception());
+
+        if (watch.split() > MAX_ACCEPTABLE_QUERY_TIME) {
+            log.warn(String.format(
+            """
+                Slow Query Detected: \n
+                query: %s
+            """, ctx.query()), new Exception());
+        }
     }
 }

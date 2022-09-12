@@ -11,9 +11,11 @@ dependencies {
     implementation 'org.modelmapper.extensions:modelmapper-jooq:2.3.9'
     implementation 'com.github.chhsiao90:modelmapper-module-java8-datatypes:1.2.1'
     implementation 'com.github.chhsiao90:modelmapper-module-jsr310:1.2.1'
-    runtimeOnly 'mysql:mysql-connector-java:8.0.27'
+    runtimeOnly 'mysql:mysql-connector-java:8.0.28'
 
+    // 랜덤 단어 생성
     implementation 'com.github.javafaker:javafaker:1.0.2'
+
     implementation "org.jooq:jooq-meta:${jooqVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
@@ -22,7 +24,7 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
-    // 실패 (jpa 엔티티 기반으로 JOOQ DSL을 생성할때 필요한 Dependency
+    // jpa 엔티티 기반으로 JOOQ DSL을 생성할때 필요한 Dependency
     jooqGenerator project(':jooq-custom')
     jooqGenerator 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
     jooqGenerator 'com.sun.xml.bind:jaxb-impl:3.0.2'
