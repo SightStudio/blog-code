@@ -1,0 +1,4 @@
+rootProject.name = 'jooq-with-jpa'
+include 'jooq-custom'
+include 'jooq-entity'
+include 'application'
