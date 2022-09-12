@@ -1,0 +1,1 @@
+GET {{server}}/board-type?keyword=a

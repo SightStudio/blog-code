@@ -1,0 +1,55 @@
+buildscript {
+    ext {
+        /**
+         * jooq version must be under 3.16.x to avoid conflict between
+         * Spring Data JPA (Using javax.persistence) and Jooq (Using jakarta.persistence)
+         * */
+        jooqVersion = '3.15.11'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("nu.studer:gradle-jooq-plugin:6.0.1")
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.6.11' apply false
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE' apply false
+    id 'nu.studer.jooq' version '6.0.1' apply false
+}
+
+group = 'com.sight'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        implementation 'org.modelmapper.extensions:modelmapper-jooq:2.3.9'
+        implementation 'com.github.chhsiao90:modelmapper-module-java8-datatypes:1.2.1'
+        implementation 'com.github.chhsiao90:modelmapper-module-jsr310:1.2.1'
+
+        runtimeOnly 'mysql:mysql-connector-java:8.0.27'
+
+        // 랜덤 단어 생성기
+        implementation('com.github.javafaker:javafaker:1.0.2')
+        implementation "org.jooq:jooq-meta:${jooqVersion}"
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testCompileOnly 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
+    }
+}

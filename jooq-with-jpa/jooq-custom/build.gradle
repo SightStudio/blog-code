@@ -1,0 +1,9 @@
+plugins { id 'nu.studer.jooq' }
+bootJar { enabled = false }
+jar { enabled = true }
+
+dependencies {
+    implementation project(':jooq-entity')
+    implementation "org.jooq:jooq-codegen:${jooqVersion}"
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+}

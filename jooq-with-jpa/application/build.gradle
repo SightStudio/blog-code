@@ -1,0 +1,51 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'nu.studer.jooq'
+}
+dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.modelmapper.extensions:modelmapper-jooq:2.3.9'
+    implementation 'com.github.chhsiao90:modelmapper-module-java8-datatypes:1.2.1'
+    implementation 'com.github.chhsiao90:modelmapper-module-jsr310:1.2.1'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+
+    runtimeOnly 'mysql:mysql-connector-java:8.0.27'
+
+    implementation 'com.github.javafaker:javafaker:1.0.2'
+    implementation "org.jooq:jooq-meta:${jooqVersion}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    implementation project(':jooq-entity')
+    jooqGenerator project(':jooq-custom')
+    jooqGenerator 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
+
+    // must use h2 1.x for incompatibly with jooq codegen throw jpa
+    // following issue: https://github.com/jOOQ/jOOQ/issues/13785
+    jooqGenerator 'com.h2database:h2:1.4.200'
+    jooqGenerator "org.jooq:jooq-meta-extensions-hibernate:${jooqVersion}"
+}
+
+apply from: 'jooq.gradle'
+
+tasks {
+    test {
+        useJUnitPlatform()
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java", "src/generated"]
+        }
+    }
+}
