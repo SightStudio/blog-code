@@ -1,0 +1,50 @@
+buildscript {
+    ext {
+        jooqVersion = '3.18.4'
+        testcontainersVersion = '1.18.3'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'nu.studer:gradle-jooq-plugin:8.2.1'
+        classpath 'com.mysql:mysql-connector-j:8.0.33'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.1.1' apply false
+    id 'io.spring.dependency-management' version '1.1.0' apply false
+    id 'nu.studer.jooq' version '8.2.1' apply false
+}
+
+group = 'com.sight.demo'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+        runtimeOnly 'mysql:mysql-connector-java:8.0.27'
+
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testCompileOnly 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
+    }
+}

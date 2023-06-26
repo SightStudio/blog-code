@@ -1,0 +1,51 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'nu.studer.jooq'
+}
+
+group = 'com.sight'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.modelmapper.extensions:modelmapper-jooq:2.3.9'
+    implementation 'com.github.chhsiao90:modelmapper-module-java8-datatypes:1.2.1'
+    implementation 'com.github.chhsiao90:modelmapper-module-jsr310:1.2.1'
+
+    implementation 'com.mysql:mysql-connector-j'
+
+    implementation "org.jooq:jooq-meta:${jooqVersion}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.testcontainers:mysql"
+
+    implementation project(':entity')
+
+    jooqGenerator project(':jooq-custom')
+    jooqGenerator "org.jooq:jooq-meta-extensions-hibernate:${jooqVersion}"
+
+    // in-memory H2로 JOOQ dsl 생성시
+    jooqGenerator 'com.h2database:h2:1.4.200'
+
+}
+
+apply from: 'jooq-codegen-jpa.gradle'
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java", "src/generated"]
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

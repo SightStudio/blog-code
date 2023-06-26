@@ -1,0 +1,73 @@
+/**
+ * 해당 설정은 JPA의 Entity를 통해 JOOQ의 DSL을 만든다.
+ * JPA entity로 in-memory H2 Database 에 스키마를 만들고 이를 리버스 엔지니어링 하는 형태로 DSL을 만든다.
+ */
+jooq {
+    configurations {
+        sakilaDB {
+            generationTool {
+                generator {
+                    database {
+                        name = 'org.jooq.meta.extensions.jpa.JPADatabase'
+                        properties {
+                            property {
+                                key = 'packages'
+                                value = 'com.sight.entity'
+                            }
+
+                            // DSL 생성시, jpa의 AttributeConverters 에 따라 jooq DSL의 타입을 매핑할지 여부
+                            property {
+                                key = 'useAttributeConverters'
+                                value = true
+                            }
+
+                            /**
+                             * [caution 1] h2 creates table name with uppercase in codegen with jpa
+                             * so we need to create custom naming strategy to use actual table name in h2
+                             *
+                             * jpa 엔티티로 jooq DSL을 만드려면 h2를 사용해야하는데
+                             * 이때, hibernate 의 NamingStrategy 를 커스텀해서 손봐줘야함
+                             * https://github.com/jOOQ/jOOQ/issues/8347
+                             */
+                            property {
+                                key = 'hibernate.physical_naming_strategy'
+                                value = 'com.sight.entity.naming.QuotedPhysicalNamingStrategy'
+                            }
+                        }
+                    }
+
+                    generate {
+
+                        // TABLE dsl로 기본 dao 생성
+                        daos = true
+
+                        // Annotate DAOs (and other types) with spring annotations, such as @Repository and @Autowired
+                        // for auto-wiring the Configuration instance, e.g. from Spring Boot's jOOQ starter
+                        springAnnotations = true
+
+                        // @Transactional 애너테이션이 추가된 Spring 전용 DAO 생성
+                        springDao = true
+
+                        // hibernate validate annotation 추가
+                        // validationAnnotations = true
+
+                        deprecated = false
+                        records = true
+                        immutablePojos = true
+                        fluentSetters = true
+                        javaTimeTypes = true
+                    }
+
+                    target {
+                        packageName = 'jooq.jooq_dsl'
+                        directory = 'src/generated'
+                        encoding = 'UTF-8'
+                    }
+
+                    // DSL에 JOOQ로 생성된것임을 알리는 'J' Prefix 추가
+                    strategy.name = 'jooq.custom.generator.JPrefixGeneratorStrategy'
+                }
+            }
+        }
+    }
+}

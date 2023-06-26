@@ -1,0 +1,6 @@
+rootProject.name = 'jooq'
+include 'jooq-custom'
+include 'entity'
+include 'application-dsl-by-testcontainer'
+include 'application-dsl-by-jpa'
+

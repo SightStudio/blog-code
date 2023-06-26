@@ -1,0 +1,172 @@
+import org.testcontainers.containers.MySQLContainer
+
+buildscript {
+    dependencies {
+        classpath 'org.testcontainers:mysql:1.18.3'
+        classpath 'org.flywaydb:flyway-mysql:9.20.0'
+    }
+}
+
+plugins {
+    id 'org.flywaydb.flyway' version '9.8.1'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'nu.studer.jooq'
+}
+
+configurations {
+    flywayMigration
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.modelmapper.extensions:modelmapper-jooq:2.3.9'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.github.chhsiao90:modelmapper-module-java8-datatypes:1.2.1'
+    implementation 'com.github.chhsiao90:modelmapper-module-jsr310:1.2.1'
+
+    implementation 'com.mysql:mysql-connector-j'
+
+    implementation "org.jooq:jooq-meta:${jooqVersion}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation project(':entity')
+
+    jooqGenerator project(':jooq-custom')
+    jooqGenerator "org.jooq:jooq-meta-extensions-hibernate:${jooqVersion}"
+
+    implementation 'org.flywaydb:flyway-core:9.8.1'
+    implementation "org.flywaydb:flyway-mysql"
+    flywayMigration 'com.mysql:mysql-connector-j'
+}
+
+tasks {
+    test {
+        useJUnitPlatform()
+    }
+}
+
+task mysqlContainer {
+    var instance = new MySQLContainer('mysql:8')
+        .withDatabaseName('sakila')
+        .withUsername('sakila-dsl-user')
+        .withPassword('sakila-dsl-pw')
+
+    instance.start()
+    mysqlContainer.ext.jdbcUrl = instance.getJdbcUrl()
+    mysqlContainer.ext.username = instance.getUsername()
+    mysqlContainer.ext.password = instance.getPassword()
+    mysqlContainer.ext.databaseName = instance.getDatabaseName()
+    mysqlContainer.ext.instance = instance
+}
+
+flyway {
+    configurations = ['flywayMigration']
+    url = mysqlContainer.jdbcUrl
+    user = 'root'
+    password = 'sakila-dsl-pw'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java", "src/generated"]
+        }
+    }
+}
+
+jooq {
+    configurations {
+        sakilaDB {
+            generationTool {
+                jdbc {
+                    driver = 'com.mysql.cj.jdbc.Driver'
+                    url = mysqlContainer.jdbcUrl
+                    user = mysqlContainer.username
+                    password = mysqlContainer.password
+                }
+
+                generator {
+                    name = 'org.jooq.codegen.DefaultGenerator'
+                    database {
+                        name = 'org.jooq.meta.mysql.MySQLDatabase'
+                        inputSchema = 'sakila'
+                        includes = '.*'
+
+                        unsignedTypes = false
+
+                        forcedTypes {
+                            forcedType {
+                                name = 'varchar'
+                                includeExpression = '.*'
+                                includeTypes = 'JSONB?'
+                            }
+                            forcedType {
+                                name = 'varchar'
+                                includeExpression = '.*'
+                                includeTypes = 'INET'
+                            }
+                        }
+                        // excludes = ''
+                    }
+
+                    generate {
+
+                        // TABLE dsl로 기본 dao 생성
+                        daos = true
+
+                        // Annotate DAOs (and other types) with spring annotations, such as @Repository and @Autowired
+                        // for auto-wiring the Configuration instance, e.g. from Spring Boot's jOOQ starter
+                        springAnnotations = true
+
+                        // @Transactional 애너테이션이 추가된 Spring 전용 DAO 생성
+                        springDao = true
+
+                        // jpa 에너테이션 포조에 추가
+                        // jpaAnnotations = true
+                        // jpaVersion = 2.2
+
+                        // hibernate validate annotation 추가
+                        // validationAnnotations = true
+
+                        deprecated = false
+                        records = true
+                        immutablePojos = true
+                        fluentSetters = true
+                        javaTimeTypes = true
+                    }
+
+                    target {
+                        packageName = 'jooq.jooq_dsl'
+                        directory = 'src/generated'
+                        encoding = 'UTF-8'
+                    }
+
+                    // DSL에 JOOQ로 생성된것임을 알리는 'J' Prefix 추가
+                    strategy.name = 'jooq.custom.generator.JPrefixGeneratorStrategy'
+                }
+            }
+        }
+    }
+}
+
+
+tasks.named('generateSakilaDBJooq').configure {
+    dependsOn tasks.named('mysqlContainer')
+    dependsOn tasks.named('flywayMigrate')
+
+    inputs.files(fileTree('src/main/resources/db/migration'))
+            .withPropertyName('migrations')
+            .withPathSensitivity(PathSensitivity.RELATIVE)
+
+    allInputsDeclared = true
+
+    doLast {
+        mysqlContainer.instance.stop()
+    }
+}

@@ -1,0 +1,62 @@
+/**
+ * [작동 안됨 - 이유 하단에 설명]
+ * 해당 설정은 sql 스크립트를 통해 JOOQ DSL을 생성한다.
+ * JPA와 마찬가지로, in-memory H2 Database에 스키마를 만들고 이를 리버스 엔지니어링 시켜 DSL을 만든다.
+ *
+ * 다만, 이 경우는 DDL을 H2 database에 맞춰야한다. (이게 말이되나...? ㅋㅋ)
+ * mysql-sakila-ddl.sql는 mysql DDL이여서 실행안됨
+ */
+jooq {
+    configurations {
+        sakilaDB {
+            generationTool {
+                generator {
+                    database {
+                        name = 'org.jooq.meta.extensions.ddl.DDLDatabase'
+                        properties {
+                            property {
+                                key = 'scripts'
+                                value = 'src/main/resources/sql/mysql-sakila-ddl.sql'
+                            }
+                        }
+                    }
+
+                    generate {
+
+                        // TABLE dsl로 기본 dao 생성
+                        daos = true
+
+                        // Annotate DAOs (and other types) with spring annotations, such as @Repository and @Autowired
+                        // for auto-wiring the Configuration instance, e.g. from Spring Boot's jOOQ starter
+                        springAnnotations = true
+
+                        // @Transactional 애너테이션이 추가된 Spring 전용 DAO 생성
+                        springDao = true
+
+                        // jpa 에너테이션 포조에 추가
+                        // jpaAnnotations = true
+                        // jpaVersion = 2.2
+
+                        // hibernate validate annotation 추가
+                        // validationAnnotations = true
+
+                        deprecated = false
+                        records = true
+                        immutablePojos = true
+                        fluentSetters = true
+                        javaTimeTypes = true
+                    }
+
+                    target {
+                        packageName = 'jooq.jooq_dsl'
+                        directory = 'src/generated'
+                        encoding = 'UTF-8'
+                    }
+
+                    // DSL에 JOOQ로 생성된것임을 알리는 'J' Prefix 추가
+                    strategy.name = 'jooq.custom.generator.JPrefixGeneratorStrategy'
+                }
+            }
+        }
+    }
+}
