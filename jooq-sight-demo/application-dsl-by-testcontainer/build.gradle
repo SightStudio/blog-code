@@ -51,23 +51,26 @@ tasks {
     }
 }
 
-task mysqlContainer {
+def createContainerIfGenerateTask(taskName) {
+    if (!project.gradle.startParameter.taskNames.contains(taskName)) {
+        return null;
+    }
+
     var instance = new MySQLContainer('mysql:8')
-        .withDatabaseName('sakila')
-        .withUsername('sakila-dsl-user')
-        .withPassword('sakila-dsl-pw')
+            .withDatabaseName('sakila')
+            .withUsername('sakila-dsl-user')
+            .withPassword('sakila-dsl-pw')
 
     instance.start()
-    mysqlContainer.ext.jdbcUrl = instance.getJdbcUrl()
-    mysqlContainer.ext.username = instance.getUsername()
-    mysqlContainer.ext.password = instance.getPassword()
-    mysqlContainer.ext.databaseName = instance.getDatabaseName()
-    mysqlContainer.ext.instance = instance
+
+    return instance
 }
+
+def testContainer = createContainerIfGenerateTask('generateSakilaDBJooq');
 
 flyway {
     configurations = ['flywayMigration']
-    url = mysqlContainer.jdbcUrl
+    url = testContainer?.jdbcUrl
     user = 'root'
     password = 'sakila-dsl-pw'
 }
@@ -86,9 +89,9 @@ jooq {
             generationTool {
                 jdbc {
                     driver = 'com.mysql.cj.jdbc.Driver'
-                    url = mysqlContainer.jdbcUrl
-                    user = mysqlContainer.username
-                    password = mysqlContainer.password
+                    url = testContainer?.jdbcUrl
+                    user = testContainer?.username
+                    password = testContainer?.password
                 }
 
                 generator {
@@ -155,9 +158,7 @@ jooq {
     }
 }
 
-
 tasks.named('generateSakilaDBJooq').configure {
-    dependsOn tasks.named('mysqlContainer')
     dependsOn tasks.named('flywayMigrate')
 
     inputs.files(fileTree('src/main/resources/db/migration'))
@@ -167,6 +168,6 @@ tasks.named('generateSakilaDBJooq').configure {
     allInputsDeclared = true
 
     doLast {
-        mysqlContainer.instance.stop()
+        testContainer?.stop()
     }
 }

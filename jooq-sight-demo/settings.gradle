@@ -1,4 +1,4 @@
-rootProject.name = 'jooq'
+rootProject.name = 'jooq-sight-demo'
 include 'jooq-custom'
 include 'entity'
 include 'application-dsl-by-testcontainer'
