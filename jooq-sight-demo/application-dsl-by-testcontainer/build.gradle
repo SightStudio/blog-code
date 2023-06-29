@@ -26,7 +26,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jooq'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.modelmapper.extensions:modelmapper-jooq:2.3.9'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'com.github.chhsiao90:modelmapper-module-java8-datatypes:1.2.1'
     implementation 'com.github.chhsiao90:modelmapper-module-jsr310:1.2.1'
 
@@ -35,10 +34,7 @@ dependencies {
     implementation "org.jooq:jooq-meta:${jooqVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    implementation project(':entity')
-
     jooqGenerator project(':jooq-custom')
-    jooqGenerator "org.jooq:jooq-meta-extensions-hibernate:${jooqVersion}"
 
     implementation 'org.flywaydb:flyway-core:9.8.1'
     implementation "org.flywaydb:flyway-mysql"

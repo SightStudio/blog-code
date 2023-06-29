@@ -24,7 +24,6 @@ dependencies {
 
     implementation "org.jooq:jooq-meta:${jooqVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation "org.testcontainers:mysql"
 
     implementation project(':entity')
 

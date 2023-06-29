@@ -3,11 +3,9 @@ package com.sight.application.tc.repository;
 import static com.sight.application.tc.config.jooq.meta.conditions.JooqBaseCondition.eq;
 import static jooq.jooq_dsl.Indexes.ACTOR_IDX_ACTOR_LAST_NAME;
 import static org.jooq.impl.DSL.concat;
-import static org.jooq.impl.DSL.groupConcat;
 import static org.jooq.impl.DSL.val;
 
 import com.sight.application.tc.dtos.FilmSummaryDto;
-import com.sight.entity.Actor;
 import jooq.jooq_dsl.tables.JActor;
 import jooq.jooq_dsl.tables.JFilm;
 import jooq.jooq_dsl.tables.JFilmActor;
