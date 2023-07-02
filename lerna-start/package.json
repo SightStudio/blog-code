@@ -1,0 +1,15 @@
+{
+  "name": "lerna-multimodule-start",
+  "private": true,
+  "workspaces": [
+    "admin-cms",
+    "client-app",
+    "common-module"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "lerna": "^7.1.1"
+  },
+  "version": "1.0.0",
+  "license": "MIT"
+}
