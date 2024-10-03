@@ -1,2 +1,0 @@
-rootProject.name = 'spring-batch-with-jooq'
-include 'jooq-custom'
