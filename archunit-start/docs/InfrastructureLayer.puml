@@ -1,0 +1,38 @@
+@startuml
+
+class ActorService<<Service>> {
+    - ActorInfraManager actorInfraManager
+
+    + doSomethingWithDomain()
+}
+
+class ActorInfraManager<<Repository>> {
+    - ActorRepository actorRepository
+    - ActorDao actorNativeDao
+}
+
+class ActorRepository<<Repository>> {
+
+}
+
+class ActorDao<<Repository>> {
+
+}
+
+class ActorConsumer<<Component>> {
+
+}
+
+class ActorPublisher<<Component>> {
+
+}
+
+
+ActorInfraManager *-- ActorRepository : "has a"
+ActorInfraManager *-- ActorDao : "has a"
+ActorInfraManager *-- ActorConsumer : "has a"
+ActorInfraManager *-- ActorPublisher : "has a"
+
+ActorService *-- ActorInfraManager : "has a"
+
+@enduml
